@@ -34,7 +34,7 @@ public class WeatherStation {
 
     public void notifyDisplays() {
         for(Display d : displays) {
-            d.update();
+            d.update(temperature,humidity,pressure);
         }
     }
 
@@ -63,5 +63,17 @@ public class WeatherStation {
         this.humidity = main.get("humidity").getAsFloat();
         this.pressure = WeatherStation.hPaToInHG(main.get("pressure").getAsFloat());
         notifyDisplays();
+    }
+
+    public static void main(String[] args) throws IOException {
+        WeatherStation station = new WeatherStation();
+        CurrentConditions currentConditions = new CurrentConditions(station);
+        StatisticsDisplay statisticsDisplay = new StatisticsDisplay();
+        ForecastDisplay forecastDisplay = new ForecastDisplay();
+
+        station.registerDisplay(currentConditions);
+        station.registerDisplay(statisticsDisplay);
+        station.registerDisplay(forecastDisplay);
+        station.measure();
     }
 }
